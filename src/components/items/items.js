@@ -28,9 +28,10 @@ export default class Items extends React.Component {
   }
 
   getId = value => {
-    this.props.setId(value);
-    console.log(value);
-
+    axios.get("https://kn4f3kklu4.execute-api.eu-west-1.amazonaws.com/default/jstasks/item?id=" + value).then(res => {
+    this.props.setId(res.data);
+    
+  })
 
   }
   renderItems = () => {
