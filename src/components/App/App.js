@@ -1,45 +1,28 @@
 import React from 'react';
-import Items from '../items/items';
+import ItemList from '../itemList/itemList';
 import ItemView from '../itemView/itemView';
-import axios from 'axios';
-import './App.css';
 
-export default class App extends React.Component {
+class App extends React.Component {
     state = {
-        item: undefined,
+        id: undefined,
         showItem: false
     };
 
-    setId = value => {
-      
-            this.setState({
-                item: value,
-                showItem: true
-            });
-      
+    setItemID = value => {
+
+        this.setState({
+            id: value,
+            showItem: true
+        });
+
     };
 
-    back = () => {
+    backButtonHandler = () => {
         this.setState({
             showItem: false
         });
     };
 
-
-    renderMobileContent = () => {
-        if (this.state.showItem) {
-            return (
-                <div>
-                    <button className="ui secondary  basic button" onClick={this.back}>Back</button>
-                    <ItemView item={this.state.item}/>
-                </div>
-            );
-        } else {
-            return (
-                <Items setId={this.setId}/>
-            );
-        }
-    };
 
     render() {
         return (
@@ -48,14 +31,20 @@ export default class App extends React.Component {
                     <div className="column tablet computer only row">
                         <div className="column">
                             <div className="ui horizontal segments computer ">
-                                <Items setId={this.setId}/>
-                                <ItemView item={this.state.item}/>
+                                <ItemList setItemID={this.setItemID}/>
+                                <ItemView id={this.state.id}/>
                             </div>
                         </div>
                     </div>
                     <div className="column mobile only row">
                         <div className="column">
-                            {this.renderMobileContent()}
+                            <div style={this.state.showItem ? null : {display: "none"}}>
+                                <button className="ui secondary  basic button" onClick={this.backButtonHandler}>Back
+                                </button>
+                                <ItemView id={this.state.id}/>
+                            </div>
+                            <div style={this.state.showItem ? {display: "none"} : null}>
+                                <ItemList setItemID={this.setItemID}/></div>
                         </div>
                     </div>
                 </div>
@@ -67,4 +56,4 @@ export default class App extends React.Component {
 
 }
 
-
+export default App;

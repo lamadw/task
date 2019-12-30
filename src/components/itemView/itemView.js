@@ -1,28 +1,51 @@
-import React, { Component } from 'react';
+import React from 'react';
+import './itemView.css';
+import itemApi from "../../apis/item";
 
-import './itemView.css'
-export default class ItemView extends React.Component {
-   
+class ItemView extends React.Component {
 
-    renderContant = () => {
-        if (this.props.item === undefined) {
+    state = {
+        item: undefined,
+        dataLoad: false,
+    };
+
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props !== prevProps) {
+            this.setState({dataLoad: true});
+            const URL = "/default/jstasks/item?id=" + this.props.id;
+            itemApi.get(URL).then(response => {
+                this.setState({item: response.data, dataLoad: false});
+            });
+        }
+    }
+
+    renderContent = () => {
+        if (this.state.dataLoad) {
+            return (
+                <div className="ui active inverted dimmer">
+                    <div className="ui text loader">Loading</div>
+                </div>
+            );
+        }
+        if (this.state.item === undefined) {
             return (
                 <div className="ui center aligned  segment i">
-                <div className="ui header">
-                    Select item to view
-                </div>
+                    <div className="ui header">
+                        Select item to view
+                    </div>
                 </div>
             );
         } else {
             return (
                 <div className="ui center aligned  segment i">
                     <div className="ui medium image">
-                        <img src=  {this.props.item.picture} alt="item image"/>
+                        <img src={this.state.item.picture} alt="itemImage"/>
                     </div>
-                    <div className="content">
-            <div className="ui header">{this.props.item.title}</div>
+                    <div className="content shefttop">
+                        <div className="ui header">{this.state.item.title}</div>
                         <div className="description">
-                        {this.props.item.desc}
+                            {this.state.item.desc}
                         </div>
                     </div>
                 </div>
@@ -34,11 +57,11 @@ export default class ItemView extends React.Component {
         return (
             <div className="ui  segment">
                 <h2 className="ui header">Item</h2>
-                {this.renderContant()}
+                {this.renderContent()}
             </div>
         );
     }
 }
 
-
+export default ItemView;
 
